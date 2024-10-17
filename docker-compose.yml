@@ -11,9 +11,6 @@ services:
       - "80:80"
     volumes:
       - ./src:/var/www/html
-      - ./src/web/wp:/var/www/html/web/wp  # WordPressのコアファイル用
-      - ./src/vendor:/var/www/html/vendor  # Composerの依存関係用
-      - ./src/web/app/uploads:/var/www/html/web/app/uploads  # アップロード用ディレクトリ
   mysql:
     platform: linux/x86_64
     image: mysql:8
