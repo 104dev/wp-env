@@ -15,11 +15,20 @@ RUN apt-get update && apt-get install --assume-yes --no-install-recommends --qui
     unzip \
     vim \
     libicu-dev \
+    sendmail \
     && docker-php-ext-install \
     pdo_mysql \
     mysqli \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# XDebugをセットアップ
+RUN pecl install xdebug && \
+    docker-php-ext-enable xdebug
+
+# Node.jsのインストール
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
 
 # Composerをセットアップ
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -29,7 +38,8 @@ COPY ./docker/sites-available/000-default.conf /etc/apache2/sites-available/000-
 
 # headers, rewrite, expiresモジュールを有効化
 RUN a2enmod headers rewrite expires
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+#RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+COPY ./docker/php.ini /usr/local/etc/php/php.ini
 
 # WP-CLIのインストール
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
