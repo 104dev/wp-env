@@ -1,0 +1,14 @@
+name: deploy
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          rsync -auv --delete --exclude-from $GITHUB_WORKSPACE/.github/workflows/.rsyncignore $GITHUB_WORKSPACE/ /home/columbusegg2020/project/docker
